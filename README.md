@@ -14,3 +14,6 @@ Basic Dependencies
 
 Git Branch - dev 
 일일 개발 이후 master에 바로 올리기 보다는 이슈 점검 후 merge하여 사용예정
+
+http://localhost:8080/swagger-ui.html
+
