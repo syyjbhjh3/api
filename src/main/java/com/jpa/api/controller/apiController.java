@@ -7,11 +7,21 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.*;
 
 @Api(tags = {"Api"})
 @RestController
@@ -20,10 +30,42 @@ import org.springframework.web.bind.annotation.RestController;
 public class apiController {
 
     private final apiService apiService;
+    @ApiOperation(value = "코인시세", notes = "코인시세")
+    @PostMapping("/coin")
+    public ResponseEntity<Object> coin(@ApiParam(value = "코인시세", required = false) @RequestBody UserRequest request) {
+        return getData("https://api.bithumb.com/public/ticker/ALL");
+    }
 
-    @ApiOperation(value = "회원가입", notes = "회원가입")
-    @PostMapping("/sign")
-    public ResponseEntity<User> signUp (@ApiParam(value = "회원정보", required = true) @RequestBody UserRequest request) {
-        return ResponseEntity.ok(apiService.createUser(request));
+    public ResponseEntity<Object> getData(String url) {
+        HashMap<String, Object> result = new HashMap<String, Object>();
+        ResponseEntity<Object> resultMap = new ResponseEntity<>(null,null,200);
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders header = new HttpHeaders();
+            HttpEntity<?> entity = new HttpEntity<>(header);
+
+            UriComponents uri = UriComponentsBuilder.fromHttpUrl(url).build();
+            resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, Object.class);
+
+            result.put("statusCode", resultMap.getStatusCodeValue());
+            result.put("header", resultMap.getHeaders());
+            result.put("body", resultMap.getBody());
+
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            result.put("statusCode", e.getRawStatusCode());
+            result.put("body"  , e.getStatusText());
+            System.out.println("error");
+            System.out.println(e.toString());
+            return resultMap;
+        }
+        catch (Exception e) {
+            result.put("statusCode", "999");
+            result.put("body"  , "error");
+            System.out.println(e.toString());
+            return resultMap;
+        }
+        return resultMap;
     }
 }
