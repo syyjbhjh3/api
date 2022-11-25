@@ -7,29 +7,23 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.HashMap;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = {"Project Manage"})
-@RestController
-@RequestMapping(value = "/")
+@Controller
+@RequestMapping(value = "/pms")
 @RequiredArgsConstructor
 public class mainController {
 
     private final apiService apiService;
+
+    @GetMapping("/")
+    public String home (HttpServletRequest request) {
+        return "index";
+    }
 
     @ApiOperation(value = "회원가입", notes = "회원가입")
     @PostMapping("/sign")
