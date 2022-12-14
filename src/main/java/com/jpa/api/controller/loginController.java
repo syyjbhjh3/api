@@ -1,6 +1,5 @@
 package com.jpa.api.controller;
 
-import com.jpa.api.model.User;
 import com.jpa.api.model.request.UserRequest;
 import com.jpa.api.service.apiService;
 import io.swagger.annotations.Api;
@@ -21,29 +20,22 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.*;
+import java.util.HashMap;
 
-@Api(tags = {"Api"})
+@Api(tags = {"Login"})
 @RestController
-@RequestMapping(value = "/api/")
+@RequestMapping(value = "/api")
 @RequiredArgsConstructor
-public class apiController {
-
-    private final apiService apiService;
-    @ApiOperation(value = "코인시세", notes = "코인시세")
-    @PostMapping("/coin")
-    public ResponseEntity<Object> coin(@ApiParam(value = "코인시세", required = false) @RequestBody UserRequest request) {
-        return getData("https://api.bithumb.com/public/ticker/ALL");
-    }
+public class loginController {
 
     @PostMapping("/login/naverLogin")
     public ResponseEntity<Object> naverLogin(@ApiParam(value = "네이버 로그인", required = false) @RequestBody UserRequest request) {
-        return getData("https://api.bithumb.com/public/ticker/ALL");
+        return getData("");
     }
 
     @PostMapping("/login/naverCallback")
     public ResponseEntity<Object> naverCallback(@ApiParam(value = "네이버 로그인 콜백", required = false) @RequestBody UserRequest request) {
-        return getData("https://api.bithumb.com/public/ticker/ALL");
+        return getData("");
     }
 
     public ResponseEntity<Object> getData(String url) {
